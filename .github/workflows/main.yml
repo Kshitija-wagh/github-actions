@@ -44,8 +44,8 @@ jobs:
       - name: Create ECS Service
         run: |
           aws ecs create-service \
-            --cluster nginx-clu \
-            --service-name nginx-service \
+            --cluster nginx-cluster \
+            --service-name nginx-ser \
             --task-definition nginx-task \
             --desired-count 1 \
             --launch-type EC2 \
