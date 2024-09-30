@@ -35,7 +35,7 @@ jobs:
           docker build -t $ECR_REGISTRY/kshitija:github.sha -f Dockerfile.yml .
           docker push $ECR_REGISTRY/kshitija:github.sha
           echo "image=$ECR_REGISTRY/kshitija:github.sha" >> $GITHUB_OUTPUT
-          - name: Register Task Definition
+      - name: Register Task Definition
         run: |
           aws ecs register-task-definition \
             --family nginx-task \
