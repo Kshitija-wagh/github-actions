@@ -1,50 +1,55 @@
 name: Deploy to Amazon ECS
+
 on:
   push:
     branches:
       - main
+
 env:
   AWS_REGION: ap-south-1
-  ECR_REPOSITORY: kshitija  
+  ECR_REPOSITORY: kshitija
+
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
     environment: development
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Configure AWS credentials
-        uses:  aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
+
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/kshitija:github.sha -f Dockerfile.yml .
+          docker build -t $ECR_REGISTRY/kshitija:github.sha-f Dockerfile .
           docker push $ECR_REGISTRY/kshitija:github.sha
-          echo "image=$ECR_REGISTRY/kshitija:github.sha" >> $GITHUB_OUTPUT
+          echo "image=$ECR_REGISTRY/kshitija:github.sha >> $GITHUB_OUTPUT
+
       - name: Create ECS Cluster
         run: |
           aws ecs create-cluster --cluster-name nginx-cluster
-     # Step to register task definition
+
       - name: Register Task Definition
         run: |
           aws ecs register-task-definition \
             --family nginx-task \
-            --container-definitions '[{"name":"shazam","image":"585768188333.dkr.ecr.ap-south-1.amazonaws.com/kshitija","portMappings":[{"containerPort":80}],"memoryReservation":128}]'
-     # Step to create ECS service
+            --container-definitions '[{"name":"kshitija","image":585768188333.dkr.ecr.ap-south-1.amazonaws.com/kshitija,"portMappings":[{"containerPort":80}],"memoryReservation":128}]'
+
       - name: Create ECS Service
         run: |
           aws ecs create-service \
