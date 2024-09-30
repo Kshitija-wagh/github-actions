@@ -5,7 +5,7 @@ on:
       - main
 env:
   AWS_REGION: ap-south-1
-  ECR_REPOSITORY: kshitija
+  ECR_REPOSITORY: kshitija  
 jobs:
   deploy:
     name: Deploy
@@ -35,11 +35,15 @@ jobs:
           docker build -t $ECR_REGISTRY/kshitija:github.sha -f Dockerfile.yml .
           docker push $ECR_REGISTRY/kshitija:github.sha
           echo "image=$ECR_REGISTRY/kshitija:github.sha" >> $GITHUB_OUTPUT
+      - name: Create ECS Cluster
+        run: |
+          aws ecs create-cluster --cluster-name nginx-cluster
+     # Step to register task definition
       - name: Register Task Definition
         run: |
           aws ecs register-task-definition \
             --family nginx-task \
-            --container-definitions '[{"name":"kshitija","image":"585768188333.dkr.ecr.ap-south-1.amazonaws.com/kshitija","portMappings":[{"containerPort":80}],"memoryReservation":128}]'
+            --container-definitions '[{"name":"shazam","image":"585768188333.dkr.ecr.ap-south-1.amazonaws.com/kshitija","portMappings":[{"containerPort":80}],"memoryReservation":128}]'
      # Step to create ECS service
       - name: Create ECS Service
         run: |
@@ -50,4 +54,3 @@ jobs:
             --desired-count 1 \
             --launch-type EC2 \
             --region ${{ env.AWS_REGION }}
-
