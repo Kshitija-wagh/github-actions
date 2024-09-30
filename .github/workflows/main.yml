@@ -4,8 +4,8 @@ on:
     branches:
       - main
 env:
-  AWS_REGION: us-west-1
-  ECR_REPOSITORY: image  
+  AWS_REGION: ap-south-1
+  ECR_REPOSITORY: kshitija
 jobs:
   deploy:
     name: Deploy
@@ -32,6 +32,6 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/image:github.sha -f Dockerfile.yml .
-          docker push $ECR_REGISTRY/image:github.sha
-          echo "image=$ECR_REGISTRY/image:github.sha" >> $GITHUB_OUTPUT
+          docker build -t $ECR_REGISTRY/kshitija:github.sha -f Dockerfile.yml .
+          docker push $ECR_REGISTRY/kshitija:github.sha
+          echo "image=$ECR_REGISTRY/kshitija:github.sha" >> $GITHUB_OUTPUT
