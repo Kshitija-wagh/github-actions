@@ -39,7 +39,7 @@ jobs:
         run: |
           aws ecs register-task-definition \
             --family nginx-task \
-            --container-definitions '[{"name":"kshitija","image":"585768188333.dkr.ecr.ap-south-1.amazonaws.com/kshitija:github.sha","portMappings":[{"containerPort":80}],"memoryReservation":128}]'
+            --container-definitions '[{"name":"kshitija","image":"585768188333.dkr.ecr.ap-south-1.amazonaws.com/kshitija","portMappings":[{"containerPort":80}],"memoryReservation":128}]'
      # Step to create ECS service
       - name: Create ECS Service
         run: |
