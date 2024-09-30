@@ -36,9 +36,9 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/kshitija:github.sha-f Dockerfile .
+          docker build -t $ECR_REGISTRY/kshitija:github.sha-f Dockerfile.yml
           docker push $ECR_REGISTRY/kshitija:github.sha
-          echo "image=$ECR_REGISTRY/kshitija:github.sha >> $GITHUB_OUTPUT
+          echo "image=$ECR_REGISTRY/kshitija:github.sha" >> $GITHUB_OUTPUT
 
       - name: Create ECS Cluster
         run: |
